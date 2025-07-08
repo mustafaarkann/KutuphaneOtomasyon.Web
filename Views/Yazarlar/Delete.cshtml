@@ -1,0 +1,46 @@
+﻿@model KutuphaneOtomasyon.Web.Models.Yazar
+
+@{
+    ViewData["Title"] = "Yazar Sil";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Layout dosyasını belirtiyoruz
+}
+
+<h1 class="text-4xl font-extrabold text-gray-800 mb-6">Yazar Sil</h1>
+
+<div class="bg-white shadow-md rounded-lg p-6 max-w-lg mx-auto">
+    <h3 class="text-xl font-semibold text-red-600 mb-4">Bu yazarı silmek istediğinizden emin misiniz?</h3>
+    <hr class="my-4 border-gray-200" />
+
+    <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <dt class="col-span-1 text-sm font-medium text-gray-500">
+            @Html.DisplayNameFor(model => model.Ad)
+        </dt>
+        <dd class="col-span-2 mt-1 text-sm text-gray-900">
+            @Html.DisplayFor(model => model.Ad)
+        </dd>
+
+        <dt class="col-span-1 text-sm font-medium text-gray-500">
+            @Html.DisplayNameFor(model => model.Soyad)
+        </dt>
+        <dd class="col-span-2 mt-1 text-sm text-gray-900">
+            @Html.DisplayFor(model => model.Soyad)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete" class="mt-8 flex items-center justify-between">
+        <input type="hidden" asp-for="YazarID" /> @* Silinecek yazarın ID'sini gizli olarak gönderiyoruz *@
+        <button type="submit" class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out">
+            <i data-lucide="trash-2" class="w-5 h-5 mr-2"></i> Sil
+        </button>
+        <a asp-action="Index" class="text-indigo-600 hover:text-indigo-900 font-medium">Listeye Geri Dön</a>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Lucide ikonlarının bu sayfada da render edilmesi için
+        // Eğer bu sayfa Ajax ile yüklenirse tekrar çağrılması gerekebilir.
+        // Mevcut tam sayfa yüklemede _Layout'tan otomatik çalışır, ama burada da bulundurmak zarar vermez.
+        lucide.createIcons();
+    </script>
+}

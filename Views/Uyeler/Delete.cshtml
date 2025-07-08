@@ -1,0 +1,46 @@
+﻿@model KutuphaneOtomasyon.Web.Models.Uye
+
+@{
+    ViewData["Title"] = "Üye Sil";
+}
+
+<div class="container mx-auto p-4 sm:p-6 lg:p-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Üye Sil</h1>
+    </div>
+
+    <div class="bg-white shadow-lg rounded-lg p-6">
+        <h3 class="text-xl font-semibold text-red-600 mb-4">Bu üyeyi silmek istediğinizden emin misiniz?</h3>
+        <p class="text-gray-700 mb-6">Bu işlem geri alınamaz.</p>
+        <hr class="mb-6" />
+
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm text-gray-700">
+            <div class="flex flex-col">
+                <dt class="font-medium text-gray-500">@Html.DisplayNameFor(model => model.Ad)</dt>
+                <dd class="mt-1 text-gray-900">@Html.DisplayFor(model => model.Ad)</dd>
+            </div>
+            <div class="flex flex-col">
+                <dt class="font-medium text-gray-500">@Html.DisplayNameFor(model => model.Soyad)</dt>
+                <dd class="mt-1 text-gray-900">@Html.DisplayFor(model => model.Soyad)</dd>
+            </div>
+            <div class="flex flex-col">
+                <dt class="font-medium text-gray-500">@Html.DisplayNameFor(model => model.Eposta)</dt>
+                <dd class="mt-1 text-gray-900">@Html.DisplayFor(model => model.Eposta)</dd>
+            </div>
+            <div class="flex flex-col">
+                <dt class="font-medium text-gray-500">@Html.DisplayNameFor(model => model.Telefon)</dt>
+                <dd class="mt-1 text-gray-900">@Html.DisplayFor(model => model.Telefon)</dd>
+            </div>
+        </dl>
+
+        <form asp-action="Delete" method="post" class="mt-6 flex gap-4">
+            <input type="hidden" asp-for="UyeID" />
+            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                Sil
+            </button>
+            <a asp-action="Index" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Listeye Geri Dön
+            </a>
+        </form>
+    </div>
+</div>

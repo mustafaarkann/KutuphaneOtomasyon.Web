@@ -1,0 +1,79 @@
+﻿@model KutuphaneOtomasyon.Web.Models.Kitap // Bu View'ın Kitap modelini kullanacağını belirtir
+
+@{
+    ViewData["Title"] = "Yeni Kitap Ekle"; // Tarayıcı sekmesinde görünen başlık
+}
+
+<div class="container mx-auto p-4 sm:p-6 lg:p-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Yeni Kitap Ekle</h1>
+    </div>
+
+    <div class="bg-white shadow-lg rounded-lg p-6">
+        <form asp-action="Create" method="post">
+            @* Model doğrulama hatalarını gösterir (Örn: ISBN boş bırakılamaz) *@
+            <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm mb-4"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label asp-for="Baslik" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                    <input asp-for="Baslik" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                    <span asp-validation-for="Baslik" class="text-red-500 text-sm mt-1 block"></span>
+                </div>
+                <div>
+                    <label asp-for="YazarID" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                    @* asp-items="ViewBag.YazarID" Controller'dan gelen SelectList'i kullanarak dropdown'ı doldurur *@
+                    <select asp-for="YazarID" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" asp-items="ViewBag.YazarID">
+                        <option value="">-- Yazar Seçin --</option> @* İlk boş seçenek *@
+                    </select>
+                    <span asp-validation-for="YazarID" class="text-red-500 text-sm mt-1 block"></span>
+                </div>
+                <div>
+                    <label asp-for="KategoriID" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                    <select asp-for="KategoriID" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" asp-items="ViewBag.KategoriID">
+                        <option value="">-- Kategori Seçin --</option>
+                    </select>
+                    <span asp-validation-for="KategoriID" class="text-red-500 text-sm mt-1 block"></span>
+                </div>
+                <div>
+                    <label asp-for="YayineviID" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                    <select asp-for="YayineviID" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" asp-items="ViewBag.YayineviID">
+                        <option value="">-- Yayınevi Seçin --</option>
+                    </select>
+                    <span asp-validation-for="YayineviID" class="text-red-500 text-sm mt-1 block"></span>
+                </div>
+                <div>
+                    <label asp-for="YayinYili" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                    <input asp-for="YayinYili" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                    <span asp-validation-for="YayinYili" class="text-red-500 text-sm mt-1 block"></span>
+                </div>
+                <div>
+                    <label asp-for="ISBN" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                    <input asp-for="ISBN" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                    <span asp-validation-for="ISBN" class="text-red-500 text-sm mt-1 block"></span>
+                </div>
+                <div>
+                    <label asp-for="MevcutAdet" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                    <input asp-for="MevcutAdet" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                    <span asp-validation-for="MevcutAdet" class="text-red-500 text-sm mt-1 block"></span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between mt-6">
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">
+                    Kaydet
+                </button>
+                <a asp-action="Index" class="inline-block align-baseline font-bold text-sm text-gray-500 hover:text-gray-800">
+                    Listeye Geri Dön
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    @* İstemci tarafı doğrulama (JavaScript) için gereklidir *@
+}
