@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore; // DbContext işlemleri için
 using System.Linq; // OrderByDescending, ToListAsync için
 using System.Threading.Tasks; // Async metodlar için
 using Microsoft.AspNetCore.Mvc.Rendering; // SelectList sınıfı için gereklidir
-
+using System; // Exception için
 
 namespace KutuphaneOtomasyon.Web.Controllers
 {
@@ -38,15 +38,13 @@ namespace KutuphaneOtomasyon.Web.Controllers
         // Yeni kitap ekleme formunu göstermek için kullanılır.
         public async Task<IActionResult> Create()
         {
-
-
-
-
             // Dropdown listeler için gerekli verileri veritabanından alıyoruz
             // SelectList nesneleri, HTML <select> elemanları için veri hazırlar.
-            // "YazarID", "TamAd" (YazarID value, TamAd metin olarak görünür)
+            // Yazar için: YazarID'yi değer, TamAd'ı (varsa) veya Ad'ı (yoksa) metin olarak göster.
             ViewData["YazarID"] = new SelectList(await _context.Yazarlar.OrderBy(y => y.Ad).ThenBy(y => y.Soyad).ToListAsync(), "YazarID", "TamAd");
+            // Kategori için: KategoriID'yi değer, Ad'ı metin olarak göster.
             ViewData["KategoriID"] = new SelectList(await _context.Kategoriler.OrderBy(k => k.Ad).ToListAsync(), "KategoriID", "Ad");
+            // Yayınevi için: YayineviID'yi değer, Ad'ı metin olarak göster.
             ViewData["YayineviID"] = new SelectList(await _context.Yayinevleri.OrderBy(y => y.Ad).ToListAsync(), "YayineviID", "Ad");
 
             return View(); // Boş bir form gönderecek
@@ -58,21 +56,31 @@ namespace KutuphaneOtomasyon.Web.Controllers
         [ValidateAntiForgeryToken] // CSRF (Cross-Site Request Forgery) saldırılarına karşı koruma sağlar
         public async Task<IActionResult> Create([Bind("KitapID,Baslik,YayinYili,ISBN,MevcutAdet,YazarID,YayineviID,KategoriID")] Kitap kitap)
         {
-
-            
-
             // Model doğrulama (data annotations'lar ile belirlenen kurallar kontrol edilir)
             if (ModelState.IsValid)
             {
-                _context.Add(kitap); // Kitabı veritabanı bağlamına ekle (henüz veritabanına gitmez)
-                await _context.SaveChangesAsync(); // Değişiklikleri veritabanına kaydet
-                TempData["SuccessMessage"] = "Kitap başarıyla eklendi."; // Başarı mesajı ayarla
-                return RedirectToAction(nameof(Index)); // İşlem sonrası Index sayfasına yönlendir
+                try
+                {
+                    _context.Add(kitap); // Kitabı veritabanı bağlamına ekle (henüz veritabanına gitmez)
+                    await _context.SaveChangesAsync(); // Değişiklikleri veritabanına kaydet
+                    TempData["SuccessMessage"] = $"Kitap '{kitap.Baslik}' başarıyla eklendi."; // Başarı mesajı ayarla
+                    return RedirectToAction(nameof(Index)); // İşlem sonrası Index sayfasına yönlendir
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = $"Kitap eklenirken bir hata oluştu: {ex.Message}"; // Hata mesajı
+                    // Hata durumunda, formdaki dropdown'ların verisini yeniden yükleyin
+                    ViewData["YazarID"] = new SelectList(await _context.Yazarlar.OrderBy(y => y.Ad).ThenBy(y => y.Soyad).ToListAsync(), "YazarID", "TamAd", kitap.YazarID);
+                    ViewData["KategoriID"] = new SelectList(await _context.Kategoriler.OrderBy(k => k.Ad).ToListAsync(), "KategoriID", "Ad", kitap.KategoriID);
+                    ViewData["YayineviID"] = new SelectList(await _context.Yayinevleri.OrderBy(y => y.Ad).ToListAsync(), "YayineviID", "Ad", kitap.YayineviID);
+                    return View(kitap); // Hatalı model ile birlikte View'ı geri gönder
+                }
             }
 
             // Model doğrulama başarısız olursa, aynı formu hatalarla birlikte göster.
             // Bu sefer, kullanıcının girdiği değerleri (kitap.YazarID vb.) seçili olarak göstermek için
             // SelectList'e dördüncü parametre olarak mevcut değeri iletiyoruz.
+            TempData["WarningMessage"] = "Lütfen tüm alanları doğru şekilde doldurduğunuzdan emin olun."; // Uyarı mesajı
             ViewData["YazarID"] = new SelectList(await _context.Yazarlar.OrderBy(y => y.Ad).ThenBy(y => y.Soyad).ToListAsync(), "YazarID", "TamAd", kitap.YazarID);
             ViewData["KategoriID"] = new SelectList(await _context.Kategoriler.OrderBy(k => k.Ad).ToListAsync(), "KategoriID", "Ad", kitap.KategoriID);
             ViewData["YayineviID"] = new SelectList(await _context.Yayinevleri.OrderBy(y => y.Ad).ToListAsync(), "YayineviID", "Ad", kitap.YayineviID);
@@ -164,6 +172,7 @@ namespace KutuphaneOtomasyon.Web.Controllers
             }
 
             // Model doğrulama başarısız olursa, formu hatalarla birlikte tekrar göster
+            TempData["WarningMessage"] = "Lütfen tüm alanları doğru şekilde doldurduğunuzdan emin olun."; // Uyarı mesajı
             ViewData["YazarID"] = new SelectList(await _context.Yazarlar.OrderBy(y => y.Ad).ThenBy(y => y.Soyad).ToListAsync(), "YazarID", "TamAd", kitap.YazarID);
             ViewData["KategoriID"] = new SelectList(await _context.Kategoriler.OrderBy(k => k.Ad).ToListAsync(), "KategoriID", "Ad", kitap.KategoriID);
             ViewData["YayineviID"] = new SelectList(await _context.Yayinevleri.OrderBy(y => y.Ad).ToListAsync(), "YayineviID", "Ad", kitap.YayineviID);
@@ -217,7 +226,5 @@ namespace KutuphaneOtomasyon.Web.Controllers
 
             return RedirectToAction(nameof(Index)); // Index sayfasına yönlendir
         }
-
-
     }
 }

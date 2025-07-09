@@ -14,7 +14,8 @@
             <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm mb-4"></div>
 
             <div class="mb-4">
-                <label asp-for="KitapID" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                
+                <label class="block text-gray-700 text-sm font-bold mb-2">Kitap Adı:</label>
                 <select asp-for="KitapID" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" asp-items="ViewBag.KitapID">
                     <option value="">Kitap Seçiniz</option>
                 </select>
@@ -22,7 +23,8 @@
             </div>
 
             <div class="mb-4">
-                <label asp-for="UyeID" class="block text-gray-700 text-sm font-bold mb-2"></label>
+  
+                <label class="block text-gray-700 text-sm font-bold mb-2">Üye Adı Soyadı:</label>
                 <select asp-for="UyeID" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" asp-items="ViewBag.UyeID">
                     <option value="">Üye Seçiniz</option>
                 </select>

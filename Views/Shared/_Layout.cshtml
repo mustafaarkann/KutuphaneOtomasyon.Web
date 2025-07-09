@@ -24,15 +24,14 @@
             stroke-linecap: round;
             stroke-linejoin: round;
         }
-        /* Artık content-section hidden sınıflarına _Layout'ta ihtiyacımız yok, çünkü sayfalar tam olarak yüklenecek.
-                    Bu stiller Home/Index.cshtml içinde hala geçerli olabilir ama burada kaldırabiliriz. */
+        /* Artık content-section hidden sınıflarına _Layout'ta ihtiyacımız yok, çünkü sayfalar tam olarak yüklenecek. */
         /* .content-section { display: none; } */
         /* .content-section:not(.hidden) { display: block; } */
     </style>
     @* Önceki Bootstrap ve site.css linklerini zaten silmiştik. *@
-    @* Eğer projenizde wwwroot/css/site.css dosyasında özel, Tailwind ile çakışmayan kurallarınız varsa, onu geri getirebilirsiniz.
-        Ancak içinde Bootstrap'e özel kod olmadığından emin olun. Genellikle bu durumda yeni bir site.css dosyası başlatılır veya doğrudan Tailwind kullanılır. *@
-    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
+    @* Eğer projenizde wwwroot/css/site.css dosyasında özel, Tailwind ile çakışmayan kurallarınız varsa, onu geri getirebilirsiniz. *@
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 </head>
 <body class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
     <div class="min-h-screen w-full max-w-7xl bg-gray-100 flex flex-col md:flex-row rounded-lg shadow-lg overflow-hidden">
@@ -105,6 +104,9 @@
         </main>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     @* Lucide ikonlarının başlatılması ve sayfa içi JavaScript kodu *@
     <script>
         // Lucide ikonlarını sayfaya ekler
@@ -147,6 +149,53 @@
             `;
             document.body.appendChild(alertBox);
         }
+
+        // --- Toastr Mesajlarını Gösteren Script Bloğu EKLENDİ ---
+        // Global Toastr ayarları (isteğe bağlı, ihtiyaçlarınıza göre değiştirin)
+        toastr.options = {
+            "closeButton": true,         // Kapatma butonu göster
+            "progressBar": true,         // İlerleme çubuğu göster
+            "positionClass": "toast-top-right", // Mesajın ekranda konumu
+            "showDuration": "300",       // Gösterim süresi
+            "hideDuration": "1000",      // Saklama süresi
+            "timeOut": "5000",           // Otomatik kapanma süresi (ms)
+            "extendedTimeOut": "1000",   // Kullanıcı üzerine geldiğinde uzatma süresi
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        // TempData ile gelen mesajları kontrol et ve Toastr ile göster
+        @if (TempData["SuccessMessage"] != null)
+        {
+                <text>
+                    toastr.success("@Html.Raw(TempData["SuccessMessage"])");
+                </text>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+                <text>
+                    toastr.error("@Html.Raw(TempData["ErrorMessage"])");
+                </text>
+        }
+
+        @if (TempData["WarningMessage"] != null)
+        {
+                <text>
+                    toastr.warning("@Html.Raw(TempData["WarningMessage"])");
+                </text>
+        }
+
+        @if (TempData["InfoMessage"] != null)
+        {
+                <text>
+                    toastr.info("@Html.Raw(TempData["InfoMessage"])");
+                </text>
+        }
+        // --- Toastr Mesaj Bloğu Sonu ---
+
     </script>
 
     @* Eğer projenizde validation script'leri veya başka sayfa özelinde script'ler kullanılıyorsa, bu satırı bırakmalısınız. *@
